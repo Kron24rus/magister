@@ -1,0 +1,8 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n+nd}{@Property}\PYG{o}{(}
+        \PYG{n}{label} \PYG{o}{=} \PYG{l+s}{\PYGZdq{}Label in web\PYGZhy{}console\PYGZdq{}}\PYG{o}{,}
+        \PYG{n}{description} \PYG{o}{=} \PYG{l+s}{\PYGZdq{}Property description in web\PYGZhy{}console\PYGZdq{}}\PYG{o}{,}
+        \PYG{n}{unbounded} \PYG{o}{=} \PYG{n}{PropertyUnbounded}\PYG{o}{.}\PYG{n+na}{ARRAY}
+\PYG{o}{)}
+\PYG{k+kd}{private} \PYG{k+kd}{static} \PYG{k+kd}{final} \PYG{n}{String} \PYG{n}{PROP\PYGZus{}DEMO\PYGZus{}COMPONENT} \PYG{o}{=} \PYG{l+s}{\PYGZdq{}demo.property\PYGZdq{}}\PYG{o}{;}
+\end{Verbatim}

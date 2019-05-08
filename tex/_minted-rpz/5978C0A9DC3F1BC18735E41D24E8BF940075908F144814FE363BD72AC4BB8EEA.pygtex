@@ -1,0 +1,22 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n+nd}{@Component}\PYG{o}{(}
+        \PYG{n}{metatype} \PYG{o}{=} \PYG{k+kc}{true}\PYG{o}{,}
+        \PYG{n}{label} \PYG{o}{=} \PYG{l+s}{\PYGZdq{}Custom Health Checks\PYGZdq{}}\PYG{o}{,}
+        \PYG{n}{description} \PYG{o}{=} \PYG{l+s}{\PYGZdq{}This health check do something\PYGZdq{}}
+\PYG{o}{)}
+\PYG{n+nd}{@Properties}\PYG{o}{(\PYGZob{}}
+        \PYG{n+nd}{@Property}\PYG{o}{(}\PYG{n}{name} \PYG{o}{=} \PYG{n}{HealthCheck}\PYG{o}{.}\PYG{n+na}{NAME}\PYG{o}{,} \PYG{n}{value} \PYG{o}{=} \PYG{l+s}{\PYGZdq{}Demo Health Check\PYGZdq{}}\PYG{o}{,}
+                \PYG{n}{description} \PYG{o}{=} \PYG{l+s}{\PYGZdq{}Name of the health check.\PYGZdq{}}\PYG{o}{,} \PYG{n}{label} \PYG{o}{=} \PYG{l+s}{\PYGZdq{}Name\PYGZdq{}}\PYG{o}{),}
+        \PYG{n+nd}{@Property}\PYG{o}{(}\PYG{n}{name} \PYG{o}{=} \PYG{n}{HealthCheck}\PYG{o}{.}\PYG{n+na}{TAGS}\PYG{o}{,} \PYG{n}{unbounded} \PYG{o}{=} \PYG{n}{PropertyUnbounde}
+        		\PYG{o}{.}\PYG{n+na}{ARRAY}\PYG{o}{,} 
+        		\PYG{n}{value} \PYG{o}{=} \PYG{o}{\PYGZob{}}\PYG{l+s}{\PYGZdq{}tag1\PYGZdq{}}\PYG{o}{,} \PYG{l+s}{\PYGZdq{}demo\PYGZdq{}}\PYG{o}{\PYGZcb{},}
+                \PYG{n}{description} \PYG{o}{=} \PYG{l+s}{\PYGZdq{}Tags for the health check.\PYGZdq{}}\PYG{o}{,} \PYG{n}{label} \PYG{o}{=} \PYG{l+s}{\PYGZdq{}Tags\PYGZdq{}}\PYG{o}{),}
+        \PYG{n+nd}{@Property}\PYG{o}{(}\PYG{n}{name} \PYG{o}{=} \PYG{n}{HealthCheck}\PYG{o}{.}\PYG{n+na}{MBEAN\PYGZus{}NAME}\PYG{o}{,} \PYG{n}{value} \PYG{o}{=} \PYG{l+s}{\PYGZdq{}demoChecks\PYGZdq{}}\PYG{o}{,} 
+        		\PYG{n}{label} \PYG{o}{=} \PYG{l+s}{\PYGZdq{}MBean Name\PYGZdq{}}\PYG{o}{,}
+                \PYG{n}{description} \PYG{o}{=} \PYG{l+s}{\PYGZdq{}Name of the JMX mbean to register for this check.\PYGZdq{}}\PYG{o}{)}
+\PYG{o}{\PYGZcb{})}
+\PYG{n+nd}{@Service}\PYG{o}{(}\PYG{n}{HealthCheck}\PYG{o}{.}\PYG{n+na}{class}\PYG{o}{)}
+\PYG{k+kd}{public} \PYG{k+kd}{class} \PYG{n+nc}{DemoHealthCheck} \PYG{k+kd}{implements} \PYG{n}{HealthCheck} \PYG{o}{\PYGZob{}}
+	\PYG{o}{...}
+\PYG{o}{\PYGZcb{}}
+\end{Verbatim}

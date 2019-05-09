@@ -1,9 +1,9 @@
-\chapter{Постановка задачи и проектирование}
+\chapter{Проектирование}
 \label{cha:design}
 
 %В данном разделе реализуется новая всячина.
 
-\section{Разработка}
+\section{Выбор фреймворка}
 
 Разработанный модуль использует сервисы зарегистрированные в регистре сервисов фреймворка предоставленные модулями приведенными в приложение А рис.~\ref{fig:comps}, темным фоном выделен разработанный модуль.
 
@@ -58,234 +58,34 @@
 \label{lst:scrReference}
 \end{listing}
 
-\subsection{Проверка модулей конкретных приложений}
+\subsection{Исследование фреймворков с помощью которых можно реализовать модуль}
 Объект ComponentContext помимо параметров конфигурации позволяет получить контекст модулей системы тем самым предоставляя список всех модулей системы. В регистре сервисов системы зарегистрирован сервис ServiceComponentRuntime предоставляющий доступ к сервис-компонентам зарегистрированным в системе. Данный сервис предоставляет список всех сервис-компонентов зарегистрированных в системе для конкретного модуля. Во время выполнения проверки происходит проверка активность всех сервис-компонентов, все компоненты должны быть включены и для включенных проверяется статус, который должен быть active, если они не указаны в конфигурации как не активные.
 
-\subsection{Проверка агентов репликации} 
-Сервис AgentManager предоставляет доступ к списку агентов репликации в системе. Во время выполнения проверки агенты проверяются на соответствие конфигурации и для активных агентов выполняется тестовая репликация. Тестовая репликация выполняется с помощью метода объекта Agent – "replicate", с типом репликации TEST. На выполнение тестовой репликации вешается слушатель который и записывает логи тестовой репликации.
+\subsection{Сравнительная таблица}
+Табличка
 
-\subsection{Проверка режимов работы}
-Сервис SlingSettingsService предоставляет доступ к списку режимов работы системы. Во время проверки выполняется проверка на полное соответствие режимов работы системы заданным в конфигурации.
+\subsection{Подробно про каждый фреймворк}
+раз
 
-\subsection{Проверка доступности удаленных ресурсов}
-Для каждого указанного в конфигурации URL выполняется GET запрос к указанному ресурсу. Код метода выполняющего запрос приведен в листинге \ref{lst:getConnection}.
+два
 
-\begin{listing}[H]
-\inputminted[linenos,frame=single]{java}{inc/src/getConnection}
-\caption{Код проверки доступности ресурса} 
-\label{lst:getConnection}
-\end{listing}
+три
 
-\subsection{Файлы конфигурации}
-Файлы конфигурации созданные пользователями системы хранятся как узлы в JCR и должны находится по пути: /apps/*/config – для всех режимов работы, и по пути /apps/*/config.{режим} для заданного режима работы, а так же должны иметь базовый тип узла – sling:OsgiConfig. Приложение А рис.~\ref{fig:configTree}.
+\subsection{Выявленные проблемы с интеграцией}
+раз
 
-Были созданы файлы конфиграций проверок для режимов работы author и publish, а так-же создана конфигурация задающая composite health check для всех режимов работы, которая агрегирует результаты всех созданных проверок. Каждый узел конфигурации в пакете описывается XML файлом, имеющим следующий вид \ref{lst:xmlConfigExample}.
+два
 
-\begin{listing}[H]
-\inputminted[linenos,frame=single]{xml}{inc/src/xmlConfigExample}
-\caption{XML описывающий узлы в пакете установки} 
-\label{lst:xmlConfigExample}
-\end{listing}
+\subsection{Заключение}
+В итоге выбрал OpenSaml
 
-Так-же создан узел наследующий параметры узла - granite/operations/components/mbean, который необходим для осуществления регистрации MBean в JMX для composite health check.
+\section{Проектные решения}
+Для решения поставленной задачи было принято решение разработать AEM пакет содержащий OSGI модуль в котором будут сервис-компоненты реализующие интерфейс предоставляемый модулей Sling Health Check Core. Так-же пакет должен содержать конфигурационные файлы которые будут задавать начальную конфигурацию для экземпляров автора и публикации при установки в систему и создавать необходимые узлы в JCR хранилище.
 
-Файлы конфигурации располагаются по путям:
-\begin{itemize}
-\item /apps/system/healthchecks/config.author/*
-\item /apps/system/healthchecks/config.publish/*
-\item /apps/system/healthchecks/config/org.apache.sling.hc.core.impl .CompositeHealthCheck-custom.config
-\item /apps/granite/operations/config/hc/demoChecks
-\end{itemize}
+Интеграцию с Nagios реализовывать с помощью использования плагина обрабатывающего JSON ответ и извлекающего из него данные проверки.
 
-\subsection{Сборка пакета}
-Пакет с модулем и файлами конфигурации собирается с помощью Maven. Используются плагины Maven Bundle Plugin и Maven SCR Plugin которые формируют MANIFEST файл в соответствие с импортируемыми классом пакетами и указанными аннотациями. (рис.~\ref{fig:customPackage})
-
-\begin{figure}[h]
-  \centering
-  \includegraphics[scale=1]{inc/svg/customPackage}
-  \caption{Диаграмма описывающая созданный пакет}
-  \label{fig:customPackage}
-\end{figure}
-
-\subsection{Интеграция с Nagios}
-Мониторинг с помощью Nagios осуществляется через использование плагинов \cite{web:nagiosMonitoringArhitect}, рис.~\ref{fig:nagiosDeploy}. В конфигурации Nagios задается ресурс мониторинг которого необходимо осуществлять а так-же плагин, с необходимыми параметрами, который будет взаимодействовать с ресурсом и передавать в Nagios обработанные результаты. Для интеграции с Nagios был использован ruby plugin – check-http-json \cite{web:nagiosPlugin} рекомендованный в документации к панели управления на сайте Adobe AEM \cite{web:aemDashboard}.
-
-Для настройки проверки необходимо задать хост с установленным на нем экземпляром AEM \cite{web:nagiosOverflow}, листинг \ref{lst:hostConfig}. Также в данной конфигурации выполняется проверка хоста на доступность с помощью команды: check-host-alive.
-
-\begin{listing}[H]
-\inputminted[linenos,frame=single,fontsize=\footnotesize]{bash}{inc/src/hostConfig}
-\caption{Конфигурация хоста} 
-\label{lst:hostConfig}
-\end{listing}
-
-Задается конфигурация команды, указывающая  имя команды а так-же путь к плагину который будет использоваться при запросах и его параметры. Листинг \ref{lst:commandConfig}.
-
-\begin{listing}[H]
-\cfile{inc/src/commandConfig}
-\caption{Конфигурация команды} 
-\label{lst:commandConfig}
-\end{listing}
-
-Для каждой проверки задается конфигурация сервиса в которой указываются хост на котором проверяются сервисы, а так-же ранее заданная команда для проверки, в которую передаются параметры. Листинги \ref{lst:serviceConfigs} и \ref{lst:serviceConfigs2}. 
-
-\begin{listing}[H]
-\cfile{inc/src/serviceConfigs}
-\caption{Конфигурации сервисов}
-\label{lst:serviceConfigs} 
-\end{listing}
-
-\begin{listing}[H]
-\cfile{inc/src/serviceConfigs2}
-\caption{Конфигурации сервисов}
-\label{lst:serviceConfigs2} 
-\end{listing}
-
-
-\section{Тестирование}
-
-Тестирование проходило в 2 этапа, локально и на тестовом сервере заказчика.
-Для локального тестирования были развернуты – авторский экземпляр AEM, система Nagios \cite{web:nagiosInstall} с установленным плагином check-http-json и заданна следующая конфигурация:
-\begin{itemize}
-\item Активные агенты репликации: publish, offloading\_outbox.
-\item Режимы работы: author, crx3, crx3tar, samplecontent.
-\item Модуль "com.softwerke.test" с сервис-компонентами один из которых отключен.
-\end{itemize}
-
-\subsection{Тестирование проверки агентов репликации}
-Для тестирования результатов проверки агентов репликации в конфигурации были заданны следующие параметры:
-\begin{itemize}
-\item compared.agents – [publish]
-\item ignored.agents – [offloading\_outbox]
-\item queue.size – 3
-\end{itemize}
-
-Ожидаемый результат проверки: "OK". Полученный результат: "OK".
-
-\subsection{Тестирование проверки доступности удаленных ресурсов}
-Для тестирования результатов проверки доступности удаленных ресурсов в конфигурации были заданны следующие параметры:
-\begin{itemize}
-\item ping.url – [https://youtube.com, https://www.google.com]
-\end{itemize}
-
-Ожидаемый результат проверки: "OK". Полученный результат: "OK".
-
-\subsection{Тестирование проверки режимов работы}
-Для тестирования результатов проверки режимов работы в конфигурации были заданны следующие параметры:
-\begin{itemize}
-\item compared.run.modes – [author, crx3, crx3tar, samplecontent]
-\end{itemize}
-
-Ожидаемый результат проверки: "OK". Полученный результат: "OK".
-
-
-\subsection{Тестирование проверки модулей конкретных приложений}
-Для тестирования результатов проверки модулей конкретных приложений в конфигурации были заданны следующие параметры:
-\begin{itemize}
-\item active.bundles – [com.softwerke.test]
-\item inactive.components – [com.softwerke.test.DisabledComponent]
-\end{itemize}
-
-Результаты при локальном тестирование – ожидаемый: "OK", полученный: "OK".
-
-В результате тестирования на тестовом сервере заказчика были выявлено что проверяемые компоненты включены но имеют статусы "UNSATISFIED REFERENSE" или "UNSATISIFIED CONFIGURATION" что приводило к падению проверки и статусу "CRITICAL". Стало ясно что необходимо проверять отсутсвтие у компоненты конфигурации или удовлетворенных зависимостей, а именно компонент должен быть включен и при этом иметь статус: "UNSATISFIED REFERENCE" или "UNSATISIFIED CONFIGURATION". Проверка была переработана чтобы соответствовать требованиям. В результате в проверку внесены соответствующие правки: 
-\begin{itemize}
-\item Все компоненты модуля должны быть включены.
-\item Компоненты указанные в параметре "inactive.components" должны иметь статус "UNSATISFIED
-REFERENCE" или "UNSATISIFIED CONFIGURATION".
-\item Модуль должен иметь все компоненты указанные в параметре "inactive.components".
-\end{itemize}
-
-%\subsection{Блок-схема всякой ерунды}
-%
-%\subsubsection*{Кстати о заголовках}
-%
-%У нас есть и \Code{subsubsection}. Только лучше её не нумеровать.
-
-\section{Документация}
-
-По умолчанию в AEM предусмотрено два способа просмотра статуса и выполнения проверок:
-\begin{itemize}
-	\item Sling Web Console Plugin: плагин позволяет запускать выполнение проверок с различными параметрами. Доступ к плагину осуществляется через веб интерфейс по пути: http://hostname/system/console/healthcheck 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\textwidth]{inc/svg/pluginMenu}
-  \caption{Интерфейс Web плагина}
-  \label{fig:pluginMenu}
-\end{figure}
-	\item AEM Health Reports: система карточек, являющаяся визуализацией проверок. Проверки могут быть объединены под общей карточкой по общему тегу если задана составная проверка. Составная проверка имеет самый худший статус. В карточках есть возможность посмотреть полный лог проверки и её конфигурацию. Доступ к Health Reports осуществляется через веб интерфейс по пути: http://hostname/libs/granite/operations/content/healthreports.html
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\textwidth]{inc/svg/demoReport}
-  \caption{Статус проверок}
-  \label{fig:demoReport}
-\end{figure}
-\end{itemize}
-		
-Интеграция проверок с Nagios реализована с помощью check\_http\_json плагина. Используемый плагин парсит JSON файл и передает в Nagios статус проверки, который может быть: "OK", "WARN" или "CRITICAL". Этот статус и отображается в панели управления Nagios. Так же в панели управления Nagios можно посмотреть лог выполнения проверки.
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\textwidth]{inc/svg/nagiosMonitor}
-  \caption{Конфигурация проверки}
-  \label{fig:nagiosMonitor}
-\end{figure}
-
-\paragraph{Replication Agents Health Check}
-При наличие в системе агентов не указанных ни в одном из параметров, или отсутствии сравниваемых агентов проверка считается неудачной.
-Конфигурация проверки имеет следующие параметры:
-\begin{itemize}
-\item compared.agents – Список MBean имен агентов, существование которых необходимо проверить.
-\item ignored.agents – Список MBean имен агентов, которые игнорируются в ходе проверки.
-\item queue.size – Параметр задает максимально допустимый для агентов размер очереди репликации. Значение по умолчанию 3.
-\end{itemize}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\textwidth]{inc/svg/agentConfig}
-  \caption{Конфигурация проверки}
-  \label{fig:agentConfig}
-\end{figure}
-
-
-\paragraph{Bundle Component Health Check}
-В списке модулей указывается полные символьные имена модулей. Список не активных сервис-компонентов задается указанием PID каждого компонента.
-Конфигурация проверки имеет следующие параметры:
-\begin{itemize}
-\item testing.bundles – Список символьных имен модулей, наличие и статус которых требуется проверить.
-\item inactive.components – Список имен сервис компонент статус которых должен быть "UNSATISFIED REFERENCE" или "UNSATISIFIED CONFIGURATION".
-\end{itemize}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\textwidth]{inc/svg/bundlesConfig}
-  \caption{Конфигурация проверки}
-  \label{fig:bundlesConfig}
-\end{figure}
-
-\paragraph{Ping Health Check}
-Параметры конфигурации:
-\begin{itemize}
-\item ping.url – Список URL ресурсов, доступность которых необходимо проверить.
-\end{itemize}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\textwidth]{inc/svg/pingConfig}
-  \caption{Конфигурация проверки}
-  \label{fig:pingConfig}
-\end{figure}
-
-\paragraph{Run Modes Health Check}
-Только полное соответствие режимов системы с режимами из конфигурации допустимо. Конфигурация проверки имеет следующие параметры:
-\begin{itemize}
-\item compared.run.modes – Список имен режимов запуска, которые должны быть заданы в системе.
-\end{itemize}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\textwidth]{inc/svg/runConfig}
-  \caption{Конфигурация проверки}
-  \label{fig:runConfig}
-\end{figure}
+\section{Заключение}
+Архитектура седлана - можно кодить.
 
 %%% Local Variables:
 %%% mode: latex

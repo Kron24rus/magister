@@ -95,27 +95,6 @@
 \item /apps/granite/operations/config/hc/demoChecks
 \end{itemize}
 
-\subsection{Сборка пакета}
-Пакет с модулем и файлами конфигурации собирается с помощью Maven. Используются плагины Maven Bundle Plugin и Maven SCR Plugin которые формируют MANIFEST файл в соответствие с импортируемыми классом пакетами и указанными аннотациями. (рис.~\ref{fig:customPackage})
-
-\begin{figure}[h]
-  \centering
-  \includegraphics[scale=1]{inc/svg/customPackage}
-  \caption{Диаграмма описывающая созданный пакет}
-  \label{fig:customPackage}
-\end{figure}
-
-\subsection{Интеграция с Nagios}
-Мониторинг с помощью Nagios осуществляется через использование плагинов \cite{web:nagiosMonitoringArhitect}, рис.~\ref{fig:nagiosDeploy}. В конфигурации Nagios задается ресурс мониторинг которого необходимо осуществлять а так-же плагин, с необходимыми параметрами, который будет взаимодействовать с ресурсом и передавать в Nagios обработанные результаты. Для интеграции с Nagios был использован ruby plugin – check-http-json \cite{web:nagiosPlugin} рекомендованный в документации к панели управления на сайте Adobe AEM \cite{web:aemDashboard}.
-
-Для настройки проверки необходимо задать хост с установленным на нем экземпляром AEM \cite{web:nagiosOverflow}, листинг \ref{lst:hostConfig}. Также в данной конфигурации выполняется проверка хоста на доступность с помощью команды: check-host-alive.
-
-\begin{listing}[H]
-\inputminted[linenos,frame=single,fontsize=\footnotesize]{bash}{inc/src/hostConfig}
-\caption{Конфигурация хоста} 
-\label{lst:hostConfig}
-\end{listing}
-
 Задается конфигурация команды, указывающая  имя команды а так-же путь к плагину который будет использоваться при запросах и его параметры. Листинг \ref{lst:commandConfig}.
 
 \begin{listing}[H]

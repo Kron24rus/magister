@@ -1,7 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{n}{define} \PYG{n}{command} \PYG{p}{\PYGZob{}}
-    \PYG{n}{command\PYGZus{}name}    \PYG{n}{check\PYGZus{}http\PYGZus{}json}\PYG{o}{\PYGZhy{}}\PYG{n}{log}
-    \PYG{n}{command\PYGZus{}line}    \PYG{o}{/}\PYG{n}{usr}\PYG{o}{/}\PYG{n}{lib}\PYG{o}{/}\PYG{n}{nagios}\PYG{o}{/}\PYG{n}{plugins}\PYG{o}{/}\PYG{n}{check\PYGZus{}http\PYGZus{}json}\PYG{p}{.}\PYG{n}{rb} \PYG{o}{\PYGZhy{}\PYGZhy{}}\PYG{n}{user} \PYG{l+s}{\PYGZdq{}\PYGZdl{}ARG1\PYGZdl{}\PYGZdq{}} \PYG{o}{\PYGZhy{}\PYGZhy{}}\PYG{n}{pass} \PYG{l+s}{\PYGZdq{}\PYGZdl{}ARG2\PYGZdl{}\PYGZdq{}} 
-    \PYG{o}{\PYGZhy{}}\PYG{n}{u} \PYG{l+s}{\PYGZdq{}http://localhost:\PYGZdl{}ARG3\PYGZdl{}/\PYGZdl{}ARG4\PYGZdl{}\PYGZdq{}} \PYG{o}{\PYGZhy{}}\PYG{n}{e} \PYG{l+s}{\PYGZdq{}\PYGZdl{}ARG5\PYGZdl{}\PYGZdq{}} \PYG{o}{\PYGZhy{}}\PYG{n}{W} \PYG{l+s}{\PYGZdq{}\PYGZdl{}ARG6\PYGZdl{}\PYGZdq{}} \PYG{o}{\PYGZhy{}}\PYG{n}{C} \PYG{l+s}{\PYGZdq{}\PYGZdl{}ARG7\PYGZdl{}\PYGZdq{}} \PYG{o}{\PYGZhy{}}\PYG{n}{p} \PYG{l+s}{\PYGZdq{}\PYGZdl{}ARG8\PYGZdl{}\PYGZdq{}}
-\PYG{p}{\PYGZcb{}}
-\end{Verbatim}

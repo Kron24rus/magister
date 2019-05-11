@@ -1,9 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{n}{define} \PYG{n}{service} \PYG{p}{\PYGZob{}} 
-\PYG{n}{use} 		        \PYG{n}{demo}\PYG{o}{\PYGZhy{}}\PYG{n}{service}
-\PYG{n}{host\PYGZus{}name} 	        \PYG{n}{aem\PYGZus{}author}
-\PYG{n}{service\PYGZus{}description} \PYG{n}{AEM} \PYG{n}{Agent} \PYG{n}{Health} \PYG{n}{Check} \PYG{n}{Log}	
-\PYG{n}{check\PYGZus{}command}       \PYG{n}{check\PYGZus{}http\PYGZus{}json}\PYG{o}{\PYGZhy{}}\PYG{n}{log}\PYG{o}{!}\PYG{n}{admin}\PYG{o}{!}\PYG{n}{admin}\PYG{o}{!}\PYG{l+m+mi}{4502}\PYG{o}{!}\PYG{n}{system}\PYG{o}{/}\PYG{n}{sling}\PYG{o}{/}\PYG{n}{monitoring}\PYG{o}{/}\PYG{n}{mbeans}\PYG{o}{/}
-\PYG{n}{org}\PYG{o}{/}\PYG{n}{apache}\PYG{o}{/}\PYG{n}{sling}\PYG{o}{/}\PYG{n}{healthcheck}\PYG{o}{/}\PYG{n}{HealthCheck}\PYG{o}{/}\PYG{n}{agentsCompare}\PYG{p}{.}\PYG{n}{json}\PYG{o}{!}\PYG{n}{status}\PYG{o}{!}\PYG{n}{WARN}\PYG{o}{!}\PYG{n}{CRITICAL}\PYG{o}{!}\PYG{n}{log}
-\PYG{p}{\PYGZcb{}}
-\end{Verbatim}

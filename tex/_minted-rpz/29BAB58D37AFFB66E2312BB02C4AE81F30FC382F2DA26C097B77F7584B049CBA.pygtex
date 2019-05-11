@@ -1,0 +1,19 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n+nt}{\PYGZlt{}samlp:AuthnRequest} \PYG{n+na}{xmlns:samlp=}\PYG{l+s}{\PYGZdq{}urn:oasis:names:tc:SAML:2.0:protocol\PYGZdq{}} 
+	\PYG{n+na}{xmlns:saml=}\PYG{l+s}{\PYGZdq{}urn:oasis:names:tc:SAML:2.0:assertion\PYGZdq{}} 
+	\PYG{n+na}{ID=}\PYG{l+s}{\PYGZdq{}23f41a6b\PYGZhy{}d70c\PYGZhy{}49a7\PYGZhy{}a120\PYGZhy{}97b3604197cc\PYGZdq{}} 
+	\PYG{n+na}{Version=}\PYG{l+s}{\PYGZdq{}2.0\PYGZdq{}} \PYG{n+na}{ProviderName=}\PYG{l+s}{\PYGZdq{}AEM SP Test\PYGZdq{}} 
+	\PYG{n+na}{IssueInstant=}\PYG{l+s}{\PYGZdq{}2018\PYGZhy{}07\PYGZhy{}16T23:52:45Z\PYGZdq{}} 
+	\PYG{n+na}{Destination=}\PYG{l+s}{\PYGZdq{}http://idp.example.com\PYGZdq{}} 
+	\PYG{n+na}{ProtocolBinding=}\PYG{l+s}{\PYGZdq{}urn:oasis:names:tc:SAML:2.0:bindings:HTTP\PYGZhy{}POST\PYGZdq{}} 
+	\PYG{n+na}{AssertionConsumerServiceURL=}\PYG{l+s}{\PYGZdq{}http://sp.example.com\PYGZdq{}}\PYG{n+nt}{\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}saml:Issuer\PYGZgt{}}example.issuer\PYG{n+nt}{\PYGZlt{}/saml:Issuer\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}samlp:NameIDPolicy} \PYG{n+na}{Format=}\PYG{l+s}{\PYGZdq{}urn:oasis:names:tc:SAML:1.1:}
+\PYG{l+s}{  	nameid\PYGZhy{}format:emailAddress\PYGZdq{}} \PYG{n+na}{AllowCreate=}\PYG{l+s}{\PYGZdq{}true\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}samlp:RequestedAuthnContext} \PYG{n+na}{Comparison=}\PYG{l+s}{\PYGZdq{}exact\PYGZdq{}}\PYG{n+nt}{\PYGZgt{}}
+    \PYG{n+nt}{\PYGZlt{}saml:AuthnContextClassRef\PYGZgt{}}urn:oasis:names:tc:SAML:2.0:ac:
+    	classes:PasswordProtectedTransport
+    \PYG{n+nt}{\PYGZlt{}/saml:AuthnContextClassRef\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}/samlp:RequestedAuthnContext\PYGZgt{}}
+\PYG{n+nt}{\PYGZlt{}/samlp:AuthnRequest\PYGZgt{}}
+\end{Verbatim}

@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{Thread}\PYG{o}{.}\PYG{n+na}{currentThread}\PYG{o}{().}\PYG{n+na}{getContextClassLoader}\PYG{o}{().}\PYG{n+na}{loadClass}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}mypackage.FooBar\PYGZdq{}}\PYG{o}{);}
+\end{Verbatim}

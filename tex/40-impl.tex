@@ -2,104 +2,100 @@
 \label{cha:impl}
 
 \section{Разработка}
+Разработку модуля необходимо начать с интеграции фреймворка Open SAML 3 с OSGI средой, затем будет рассмотрена разработка модулей авторизации и работы с SAML сообщениями.
 
-Разработанный модуль использует сервисы зарегистрированные в регистре сервисов фреймворка предоставленные модулями приведенными в приложение А рис.~\ref{fig:comps}, темным фоном выделен разработанный модуль.
+\subsection{Интеграция Open SAML 3 со средой OSGI}
+Как было выявлено в процессе выбора фреймворка, Open SAML 3 выполняет первоначальную инициализацию, загружая необходимые ресурсы и классы используя загрузчик классов не знающий о существование среды OSGI. Стандартный процесс инициализации фреймворка предполагает вызов метода initialize() сервиса org.opensaml.core.config.InitializationService. Данный сервис загружает все объекты которые необходимы для работы и регистрирует их в Java среде использую Java Services API с помощью сервиса org.opensaml.core.config.ConfigurationService. Для использования фреймворка в OSGI среде необходимо переопределить инициализацию фреймворка и поведение вышеописанных сервисов.
 
-Модуль Apache Sling Health Check Web Console Plugin ищет в регистре сервисов фреймворка, сервисы зарегистрированные по интерфейсу HealthCheck и удовлетворяющие введенным пользователем фильтрам. Поэтому разработанные проверки реализуют интерфейс HealthCheck и представляют из себя сервис-компоненты, рис.~\ref{fig:classDia}. Каждая проверка реализует метод "execute" возвращающий результат проверки в виде лога который записывается во время выполнения, листинг \ref{lst:simpleExecute}. Лог отображается в веб плагине, и на его основе выставляется статус проверки. Возможные статусы сообщений: "debug", "info", "warn" и "critical".
+Для решения данной задачи было разработано три класса выполняющие первоначальную инициализацию фреймворка:
+\begin{enumerate}
+\item Activator - класс в котором заданы действия выполняющиеся при запуске модуля. В данном приложение метод активации извлекает загрузчик классов этого модуля и передает его в класс инициализации Open SAML 3, после чего вызывается метод SamlInitializationSupport.initialize(), листинг \ref{lst:activator}.
+\item InitializationXMLConfigurator - класс наследует XMLConfigurator и подменяет загрузчик классов в методе createClassInstance(), листинг \ref{lst:xmlConfigurator}.
+\item SamlInitializationSupport - основной класс инициализации, хранит все конфигурации и загрузчик классов модуля, листинг \ref{lst:samlInitialization}. Содержит следующие ключевые методы:
+\begin{enumerate}
+\item initializeXMLTooling - инициализирует все XML сервисы, перечисленные в списке конфигураций: configs[], использует переопределённый InitializationXMLConfigurator.
+\item initializeAlgorithmRegistry -инициализирует алгоритмы используя загрузчик классов модуля.
+\item initializeParserPool - инициализирует XML парсер.
+\end{enumerate}
+\end{enumerate}
 
-\begin{listing}[H]
-\inputminted[linenos,frame=single]{java}{inc/src/simpleExecute}
-\caption{Главный метод проверок} 
-\label{lst:simpleExecute}
-\end{listing}
+\begin{longlisting}
+\inputminted[linenos,frame=single]{java}{inc/src/Activator}
+\caption{Метод активации модуля} 
+\label{lst:activator}
+\end{longlisting}
 
-Сервис-компоненты создаются при помощи аннотации @Component, объявляющей класс компонентом, и аннотации @Service указывающий сервис интерфейс реализуемый данным компонентом \cite{web:felixScr}. Для проверок задаются обязательные свойства с помощью аннотации @Property, листинг \ref{lst:scrComponent}.
-\begin{itemize}
-\item HealthCheck.NAME – Отображаемое имя проверки.
-\item HealthCheck.TAGS – Тэги проверки.
-\item HealthCheck.MBEAN\_NAME – Имя проверки в JMX.
-\end{itemize}
+\begin{longlisting}
+\inputminted[linenos,frame=single]{java}{inc/src/SamlInitializationSupport}
+\caption{Класс инициализации Open SAML 3} 
+\label{lst:samlInitialization}
+\end{longlisting}
 
-\begin{listing}[H]
-\inputminted[linenos,frame=single]{java}{inc/src/scrComponent}
-\caption{Объявление сервис-компонента проверки} 
-\label{lst:scrComponent}
-\end{listing}
+\begin{longlisting}
+\inputminted[linenos,frame=single]{java}{inc/src/InitializationXMLConfigurator}
+\caption{Класс инициализации XML конфигураций} 
+\label{lst:xmlConfigurator}
+\end{longlisting}
 
-Конфигурация компонент задается так-же через аннотацию @Property указанную для полей класса, листинг \ref{lst:scrProperty}. 
-
-\begin{listing}[H]
-\inputminted[linenos,frame=single]{java}{inc/src/scrProperty}
-\caption{Конфигурируемые параметры сервис-компонента} 
-\label{lst:scrProperty}
-\end{listing}
-
-Как было описано выше, активация компонент происходит при доступе к ним, при этом вызывается метод помеченный аннотацией @Activate и выполняются действия необходимые для работы компонента, а именно извлекаются значения конфигурации с помощью метода ComponentContext.getProperties(), данный объект является уникальным для каждого сервис-компонента, листинг \ref{lst:scrActivate}. После использования компонента, вызывается метод помеченный аннотацией @Deactivate в котором выполняется высвобождение ресурсов.
-
-\begin{listing}[H]
-\inputminted[linenos,frame=single]{java}{inc/src/scrActivate}
-\caption{Методы активации и деактивации сервис-компонента} 
-\label{lst:scrActivate}
-\end{listing}
-
-Доступ к сервисам зарегистрированным в регистре сервисов осуществляется с помощью внедрения зависимостей, по средствам аннотации @Reference. Листинг \ref{lst:scrReference}.
-
-%fontsize=\footnotesize
-%\begin{mdframed}[frametitle={Конфигурация сервис-компонента}]
-%	\inputminted[linenos,frame=single]{java}{inc/src/scrComponent}
-	%\frametitle{Конфигурация сервис-компонента}
-%	\label{lst:scrComponent}
-%\end{mdframed}
-\begin{listing}[H]
-\inputminted[linenos,frame=single]{java}{inc/src/scrReference}
-\caption{Доступ к сервисам} 
-\label{lst:scrReference}
-\end{listing}
+Данные классы выполняют инициализацию фреймворка Open SAML 3 во время активации модуля. Дальнейшая работа с фреймворком не требует специальных настроек и может выполняться как в классическом Java приложение.
 
 \subsection{Подмодуль authentication}
-Объект ComponentContext помимо параметров конфигурации позволяет получить контекст модулей системы тем самым предоставляя список всех модулей системы. В регистре сервисов системы зарегистрирован сервис ServiceComponentRuntime предоставляющий доступ к сервис-компонентам зарегистрированным в системе. Данный сервис предоставляет список всех сервис-компонентов зарегистрированных в системе для конкретного модуля. Во время выполнения проверки происходит проверка активность всех сервис-компонентов, все компоненты должны быть включены и для включенных проверяется статус, который должен быть active, если они не указаны в конфигурации как не активные.
+Данный пакет предназначен для обработки запросов поступающих к сервису и является входной точкой приложения, диаграмма классов пакета представлена в приложение А рис.~\ref{fig:authenticationModule}. Пакет содержит следующие подпакеты и классы:
+\begin{enumerate}
+\item security.encryption
+\item servlets
+\item utils
+\item Constatns
+\item User
+\item UserCookie
+\end{enumerate}
 
 \subsection{Подмодуль saml} 
-Сервис AgentManager предоставляет доступ к списку агентов репликации в системе. Во время выполнения проверки агенты проверяются на соответствие конфигурации и для активных агентов выполняется тестовая репликация. Тестовая репликация выполняется с помощью метода объекта Agent – "replicate", с типом репликации TEST. На выполнение тестовой репликации вешается слушатель который и записывает логи тестовой репликации.
+Данный пакет предназначен для работы с SAML сообщениями а также конфигурации модуля, диаграмма классов пакета представлена в приложение А рис.~\ref{fig:samlModule}. Пакет содержит следующие подпакеты и классы:
+\begin{enumerate}
+\item bundle
+\item configuration
+\item messages
+\item security
+\item utils
+\item validator
+\end{enumerate}
 
-\subsection{Файлы конфигурации}
-Файлы конфигурации созданные пользователями системы хранятся как узлы в JCR и должны находится по пути: /apps/*/config – для всех режимов работы, и по пути /apps/*/config.{режим} для заданного режима работы, а так же должны иметь базовый тип узла – sling:OsgiConfig. Приложение А рис.~\ref{fig:configTree}.
-
-Были созданы файлы конфиграций проверок для режимов работы author и publish, а так-же создана конфигурация задающая composite health check для всех режимов работы, которая агрегирует результаты всех созданных проверок. Каждый узел конфигурации в пакете описывается XML файлом, имеющим следующий вид \ref{lst:xmlConfigExample}.
-
-\begin{listing}[H]
-\inputminted[linenos,frame=single]{xml}{inc/src/xmlConfigExample}
-\caption{XML описывающий узлы в пакете установки} 
-\label{lst:xmlConfigExample}
-\end{listing}
+\subsection{Конфигурация модуля}
+Конфигурация модуля находится в пакете saml и содержит два вида конфигурации:
+\begin{enumerate}
+\item SamlConfiguration
+\item SamlServiceProviderConfigurationFactory
+\end{enumerate}
 
 \section{Тестирование}
 
 Тестирование проходило в 2 этапа, локально и на тестовом сервере заказчика.
-Для локального тестирования были развернуты – авторский экземпляр AEM, система Nagios \cite{web:nagiosInstall} с установленным плагином check-http-json и заданна следующая конфигурация:
+Для локального тестирования были развернуты – три AEM лэндскейпа.
 \begin{itemize}
-\item Активные агенты репликации: publish, offloading\_outbox.
-\item Режимы работы: author, crx3, crx3tar, samplecontent.
-\item Модуль "com.softwerke.test" с сервис-компонентами один из которых отключен.
+\item Режимы работы: author, crx3, crx3tar, nosamplecontent.
 \end{itemize}
 
 \subsection{Тестирование сценария входа}
-Для тестирования результатов проверки агентов репликации в конфигурации были заданны следующие параметры:
+Для тестирование сценария входа использовался два ресурса где выполнялся вход с настроенной конфигурацией используемого в компании поставщика учетных записей.
 \begin{itemize}
-\item compared.agents – [publish]
-\item ignored.agents – [offloading\_outbox]
-\item queue.size – 3
+\item post binding
+\item redirect binding
 \end{itemize}
 
-Ожидаемый результат проверки: "OK". Полученный результат: "OK".
+Ожидаемый результат проверки: "Пользователь успешно залогинен". 
+Полученный результат: "Пользователь успешно залогинен".
 
 \subsection{Тестирование сценария выхода}
-Для тестирования результатов проверки доступности удаленных ресурсов в конфигурации были заданны следующие параметры:
+Для тестирования сценариев выхода было использовано три портала использующих разработанный модуль.
 \begin{itemize}
-\item ping.url – [https://youtube.com, https://www.google.com]
+\item пользователь успешно залогинен на одном портале и нажимает кнопку разлогин.
+\item пользователь залогинен на 2 порталах и нажимает кнопку разлогин на одном из них
+\item пользователь успешно залогинен на 3 порталах и нажимает кнопку на разлогин на одном из них.
 \end{itemize}
 
-Ожидаемый результат проверки: "OK". Полученный результат: "OK".
+Ожидаемый результат операции: "OK". 
+Полученный результат: "OK".
 
 %\subsection{Блок-схема всякой ерунды}
 %
@@ -109,88 +105,28 @@
 
 \section{Документация}
 
-По умолчанию в AEM предусмотрено два способа просмотра статуса и выполнения проверок:
-\begin{itemize}
-	\item Sling Web Console Plugin: плагин позволяет запускать выполнение проверок с различными параметрами. Доступ к плагину осуществляется через веб интерфейс по пути: http://hostname/system/console/healthcheck 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\textwidth]{inc/svg/pluginMenu}
-  \caption{Интерфейс Web плагина}
-  \label{fig:pluginMenu}
-\end{figure}
-	\item AEM Health Reports: система карточек, являющаяся визуализацией проверок. Проверки могут быть объединены под общей карточкой по общему тегу если задана составная проверка. Составная проверка имеет самый худший статус. В карточках есть возможность посмотреть полный лог проверки и её конфигурацию. Доступ к Health Reports осуществляется через веб интерфейс по пути: http://hostname/libs/granite/operations/content/healthreports.html
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\textwidth]{inc/svg/demoReport}
-  \caption{Статус проверок}
-  \label{fig:demoReport}
-\end{figure}
-\end{itemize}
-		
-Интеграция проверок с Nagios реализована с помощью check\_http\_json плагина. Используемый плагин парсит JSON файл и передает в Nagios статус проверки, который может быть: "OK", "WARN" или "CRITICAL". Этот статус и отображается в панели управления Nagios. Так же в панели управления Nagios можно посмотреть лог выполнения проверки.
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\textwidth]{inc/svg/nagiosMonitor}
-  \caption{Конфигурация проверки}
-  \label{fig:nagiosMonitor}
-\end{figure}
+Приложения использующие модуль должны добавить к себе файл с конфигурацией (ссылка на XML файл, пример) либо заполнить конфигурацию в ручном режиме, однако такой подход не рекомендуется.
 
-\paragraph{Replication Agents Health Check}
-При наличие в системе агентов не указанных ни в одном из параметров, или отсутствии сравниваемых агентов проверка считается неудачной.
-Конфигурация проверки имеет следующие параметры:
+\paragraph{Конфигурация поставщика сервиса}
+Поставщик сервиса содержит следующий набор конфигураций.
 \begin{itemize}
-\item compared.agents – Список MBean имен агентов, существование которых необходимо проверить.
-\item ignored.agents – Список MBean имен агентов, которые игнорируются в ходе проверки.
-\item queue.size – Параметр задает максимально допустимый для агентов размер очереди репликации. Значение по умолчанию 3.
+\item cookieexpire
 \end{itemize}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{inc/svg/agentConfig}
-  \caption{Конфигурация проверки}
-  \label{fig:agentConfig}
-\end{figure}
-
-
-\paragraph{Bundle Component Health Check}
-В списке модулей указывается полные символьные имена модулей. Список не активных сервис-компонентов задается указанием PID каждого компонента.
-Конфигурация проверки имеет следующие параметры:
-\begin{itemize}
-\item testing.bundles – Список символьных имен модулей, наличие и статус которых требуется проверить.
-\item inactive.components – Список имен сервис компонент статус которых должен быть "UNSATISFIED REFERENCE" или "UNSATISIFIED CONFIGURATION".
-\end{itemize}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\textwidth]{inc/svg/bundlesConfig}
-  \caption{Конфигурация проверки}
-  \label{fig:bundlesConfig}
-\end{figure}
-
-\paragraph{Ping Health Check}
-Параметры конфигурации:
-\begin{itemize}
-\item ping.url – Список URL ресурсов, доступность которых необходимо проверить.
-\end{itemize}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\textwidth]{inc/svg/pingConfig}
-  \caption{Конфигурация проверки}
-  \label{fig:pingConfig}
-\end{figure}
-
-\paragraph{Run Modes Health Check}
-Только полное соответствие режимов системы с режимами из конфигурации допустимо. Конфигурация проверки имеет следующие параметры:
-\begin{itemize}
-\item compared.run.modes – Список имен режимов запуска, которые должны быть заданы в системе.
-\end{itemize}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\textwidth]{inc/svg/runConfig}
-  \caption{Конфигурация проверки}
+  \includegraphics[width=\textwidth]{inc/svg/provider}
+  \caption{Конфигурация поставщика сервиса}
   \label{fig:runConfig}
+\end{figure}
+
+\paragraph{Конфигурация поставщика учетных записей}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{inc/svg/saml-config}
+  \caption{Конфигурация поставщика учетных записей}
+  \label{fig:samlConfig}
 \end{figure}
 
 %%% Local Variables:

@@ -1,0 +1,16 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n+nd}{@Override}
+\PYG{k+kd}{public} \PYG{k+kt}{void} \PYG{n+nf}{start}\PYG{o}{(}\PYG{n}{BundleContext} \PYG{n}{bundleContext}\PYG{o}{)} \PYG{o}{\PYGZob{}}
+    \PYG{n}{LOGGER}\PYG{o}{.}\PYG{n+na}{debug}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}Starting SAML Activator....\PYGZdq{}}\PYG{o}{);}
+    \PYG{n}{BundleWiring} \PYG{n}{bundleWiring} \PYG{o}{=} \PYG{n}{bundleContext}\PYG{o}{.}\PYG{n+na}{getBundle}\PYG{o}{()}
+    							\PYG{o}{.}\PYG{n+na}{adapt}\PYG{o}{(}\PYG{n}{BundleWiring}\PYG{o}{.}\PYG{n+na}{class}\PYG{o}{);}
+    \PYG{n}{ClassLoader} \PYG{n}{loader} \PYG{o}{=} \PYG{n}{bundleWiring}\PYG{o}{.}\PYG{n+na}{getClassLoader}\PYG{o}{();}
+    \PYG{n}{SamlInitializationSupport}\PYG{o}{.}\PYG{n+na}{setBundleClassLoader}\PYG{o}{(}\PYG{n}{loader}\PYG{o}{);}
+    \PYG{k}{try} \PYG{o}{\PYGZob{}}
+        \PYG{n}{SamlInitializationSupport}\PYG{o}{.}\PYG{n+na}{initialize}\PYG{o}{();}
+    \PYG{o}{\PYGZcb{}} \PYG{k}{catch} \PYG{o}{(}\PYG{n}{InitializationException} \PYG{o}{|} \PYG{n}{XMLConfigurationException} \PYG{n}{e}\PYG{o}{)} \PYG{o}{\PYGZob{}}
+        \PYG{n}{LOGGER}\PYG{o}{.}\PYG{n+na}{error}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}There was a problem with OpenSAML initialization \PYGZhy{} \PYGZdq{}} 
+        			\PYG{o}{+} \PYG{n}{e}\PYG{o}{.}\PYG{n+na}{getMessage}\PYG{o}{(),} \PYG{n}{e}\PYG{o}{);}
+    \PYG{o}{\PYGZcb{}}
+\PYG{o}{\PYGZcb{}}
+\end{Verbatim}

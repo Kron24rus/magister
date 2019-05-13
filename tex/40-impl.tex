@@ -26,12 +26,6 @@
 \end{longlisting}
 
 \begin{longlisting}
-\inputminted[linenos,frame=single]{java}{inc/src/SamlInitializationSupport}
-\caption{Класс инициализации Open SAML 3} 
-\label{lst:samlInitialization}
-\end{longlisting}
-
-\begin{longlisting}
 \inputminted[linenos,frame=single]{java}{inc/src/InitializationXMLConfigurator}
 \caption{Класс инициализации XML конфигураций} 
 \label{lst:xmlConfigurator}
@@ -107,11 +101,18 @@
 \paragraph{Пакет configuration} содержит сервисы конфигурации которые будут рассмотрены подробно в следующей секции данной главы.
 \paragraph{Пакет messages} содержит классы осуществляющие генерацию SAML сообщений которые отправляются поставщику учетных записей и состоит из следующих классов:
 \begin{enumerate}
-\item BindingType
-\item AbstractSamlMessage
-\item SAML2AuthnRequestMessage
-\item SAML2LogoutRequestMessage
-\item SAML2LogoutResponseMessage
+\item BindingType - перечисляемый тип который содержит виды SAML привязки доступные в приложение. В текущей версии поддерживаются только POST и REDIRECT.
+\item AbstractSamlMessage - абстрактный класс который содержит общие методы для всех SAML сообщений. Содержит следующие методы для работы с сообщениями:
+\begin{enumerate}
+\item generateUUID - генерирует ID которое служит идентификатором сообщения.
+\item generateSigningParameters - генерирует параметры необходимые для подписи сообщения.
+\item appendSigningData - подписывает сообщение в соответствие с типом привязки.
+\item signObject - подписывает сообщение с помощью сертификата для типа привязки POST.
+\item sendMessageToIDP - собирает сообщение и отправляет его поставщику учетных записей.
+\end{enumerate}
+\item SAML2AuthnRequestMessage - сообщение авторизации.
+\item SAML2LogoutRequestMessage - сообщение выхода из системы.
+\item SAML2LogoutResponseMessage - сообщение ответ на запрос выхода из системы со стороны поставщика учетных записей.
 \end{enumerate}
 \paragraph{Пакет security} содержит класс X509 который осуществляет взаимодействие с Java хранилищем ключей и предоставляет ключи для подписи сообщений или валидации полученных сообщений.
 \paragraph{Пакет utils} содержит классы инициализации которые были рассмотрены ранее, а также вспомогательный класс SamlUtils со следующими методами:
@@ -121,23 +122,43 @@
 \end{enumerate}
 \paragraph{Пакет validator} содержит единственный класс SamlAuthnResponseValidator, который выполняет валидацию SAML ответа от поставщика учетных записей на запрос авторизации. Код валидации представлен на листинге \ref{lst:validation}. В процессе валидации проверяется что структура сигнатуры верна и она подписана сертификатом который принадлежит поставщику учетных записей. Валидатор сигнатуры использует для работы Java Service API и требует отдельного переопределения для использования загрузчика классов модуля, листинг \ref{lst:activator}.
 
-\begin{listing}[H]
-\inputminted[linenos,frame=single]{java}{inc/src/validation}
-\caption{Код валидации полученного утверждения} 
-\label{lst:validation}
-\end{listing}
-
-\begin{listing}[H]
+\begin{longlisting}
 \inputminted[linenos,frame=single]{java}{inc/src/validatorLoader}
-\caption{Код валидации полученного утверждения} 
+\caption{Код переопределения загрузчика классов валидатора} 
 \label{lst:validatorLoader}
-\end{listing}
+\end{longlisting}
 
 \subsection{Конфигурация модуля}
 Конфигурация модуля находится в пакете saml и содержит два вида конфигурации:
 \begin{enumerate}
-\item SamlConfigurationImpl - конфигурация которая содержит все элементы задающие используемый в системе поставщик учетных записей.
-\item SamlServiceProviderConfigurationFactory - конфигурация которая задает параметры поставщика сервиса в системе. В системе может использоваться несколько различных поставщиков учетных записей с различными конфигурациями.
+\item SamlConfigurationImpl - конфигурация которая содержит все элементы задающие используемый в системе поставщик учетных записей. Имеет следующие параметры:
+\begin{enumerate}
+\item idp.metadata.uri - URL метаданных IdP из которых извлекаются URL авторизации и выхода из системы.
+\item jvm.keystore.location - путь до Java хранилища ключей в системе.
+\item jvm.keystore.password - пароль Java хранилища ключей.
+\item sp.saml.binding.type - тип SAML привязки, выбираемый параметр который может быть POST или REDIRECT.
+\item ids.cookie.expiry - время жизни куки пользователя, если -1 время жизни приравнивается к времени жизни сессии.
+\end{enumerate}
+\item SamlServiceProviderConfigurationFactory - конфигурация которая задает параметры поставщика сервиса в системе. В системе может использоваться несколько различных поставщиков учетных записей с различными конфигурациями. Имеет следующие параметры:
+\begin{enumerate}
+\item sp.acs.uri - URL для обработки ответов от IdP и обработки утверждений.
+\item sp.name - имя поставщика сервиса.
+\item sp.id - идентификатор поставщика сервиса, используется для доступа к данной конфигурации.
+\item x509.certificate.alias - имя сертификата который используется для подписи сообщений и валидации ответов от IdP.
+\item x509.certificate.password - пароль от сертификата.
+\item wcms.ids.cookie.name - имя под которым сохраняются куки пользователя.
+\item wcms.ids.redirect.landingPage.url - URL на который переправляется пользователь после успешной авторизации.
+\item wcms.ids.error.redirect.url - URL ошибок на который переправляется пользователь при возникновение ошибок в процессе авторизации.
+\item wcms.ids.redirect.pattern - проверяет что URL перенаправления валдиный. 
+\item cookie.additional.attributes - дополнительные параметры полученные от IdP.
+\end{enumerate}
+\item IdsConfigurationImpl - вспомогательная конфигурация, которая задает параметры позволяющие пользователю проходить авторизацию на стороне сайта или портала без перехода на сайт IdP. Имеет следующие параметры:
+\begin{enumerate}
+\item ids.host.name - адрес сервиса.
+\item ids.port.number - порт сервиса.
+\item ids.logon.ui.script - путь до скрипта пользовательского интерфейса.
+\item ids.user.profile.script - путь до скрипта модального окна IdP.
+\end{enumerate}
 \end{enumerate}
 
 \section{Тестирование}
@@ -175,7 +196,7 @@
 %
 %У нас есть и \Code{subsubsection}. Только лучше её не нумеровать.
 
-\section{Документация}
+\section{Конфигурация в системе}
 
 Приложения использующие модуль должны добавить к себе файл с конфигурацией (ссылка на XML файл, пример) либо заполнить конфигурацию в ручном режиме, однако такой подход не рекомендуется.
 
@@ -192,6 +213,12 @@
   \label{fig:runConfig}
 \end{figure}
 
+\begin{listing}[H]
+\inputminted[linenos,frame=single]{java}{inc/src/samlProviderConfiguration}
+\caption{Код получения шифра} 
+\label{lst:samlProviderConfiguration}
+\end{listing}
+
 \paragraph{Конфигурация поставщика учетных записей}
 
 \begin{figure}[H]
@@ -200,6 +227,27 @@
   \caption{Конфигурация поставщика учетных записей}
   \label{fig:samlConfig}
 \end{figure}
+
+\begin{listing}[H]
+\inputminted[linenos,frame=single]{java}{inc/src/samlConfiguration}
+\caption{Код получения шифра} 
+\label{lst:samlConfiguration}
+\end{listing}
+
+\paragraph{Конфигурация скрипта}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{inc/svg/idsConfig}
+  \caption{Конфигурация javascript}
+  \label{fig:idsConfig}
+\end{figure}
+
+\begin{listing}[H]
+\inputminted[linenos,frame=single]{java}{inc/src/idsConfiguration}
+\caption{Код получения шифра} 
+\label{lst:idsConfiguration}
+\end{listing}
 
 %%% Local Variables:
 %%% mode: latex

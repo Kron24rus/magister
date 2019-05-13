@@ -1,0 +1,17 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{o}{\PYGZlt{}?}\PYG{n}{xml} \PYG{n}{version}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}1.0\PYGZdq{}} \PYG{n}{encoding}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}UTF\PYGZhy{}8\PYGZdq{}}\PYG{o}{?\PYGZgt{}}
+\PYG{o}{\PYGZlt{}}\PYG{n}{jcr}\PYG{o}{:}\PYG{n}{root} \PYG{n}{xmlns}\PYG{o}{:}\PYG{n}{sling}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}http://sling.apache.org/jcr/sling/1.0\PYGZdq{}} 
+	      \PYG{n}{xmlns}\PYG{o}{:}\PYG{n}{jcr}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}http://www.jcp.org/jcr/1.0\PYGZdq{}}
+    \PYG{n}{jcr}\PYG{o}{:}\PYG{n}{primaryType}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}sling:OsgiConfig\PYGZdq{}}
+    \PYG{n}{sp}\PYG{o}{.}\PYG{n+na}{acs}\PYG{o}{.}\PYG{n+na}{uri}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}https://com.example/bin/login.example.html\PYGZdq{}}
+    \PYG{n}{sp}\PYG{o}{.}\PYG{n+na}{name}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}testservice\PYGZdq{}}
+    \PYG{n}{sp}\PYG{o}{.}\PYG{n+na}{id}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}localhost\PYGZus{}test\PYGZdq{}}
+    \PYG{n}{x509}\PYG{o}{.}\PYG{n+na}{certificate}\PYG{o}{.}\PYG{n+na}{alias}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}test\PYGZhy{}cert\PYGZhy{}alias\PYGZdq{}}
+    \PYG{n}{x509}\PYG{o}{.}\PYG{n+na}{certificate}\PYG{o}{.}\PYG{n+na}{password}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}password\PYGZdq{}}
+    \PYG{n}{wcms}\PYG{o}{.}\PYG{n+na}{ids}\PYG{o}{.}\PYG{n+na}{cookie}\PYG{o}{.}\PYG{n+na}{name}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}TEST\PYGZus{}IDS\PYGZus{}LOCALHOST\PYGZdq{}}
+    \PYG{n}{wcms}\PYG{o}{.}\PYG{n+na}{ids}\PYG{o}{.}\PYG{n+na}{redirect}\PYG{o}{.}\PYG{n+na}{landingPage}\PYG{o}{.}\PYG{n+na}{url}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}/bin/home\PYGZdq{}}
+    \PYG{n}{wcms}\PYG{o}{.}\PYG{n+na}{ids}\PYG{o}{.}\PYG{n+na}{error}\PYG{o}{.}\PYG{n+na}{redirect}\PYG{o}{.}\PYG{n+na}{url}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}/bin/test/error\PYGZdq{}}
+    \PYG{n}{wcms}\PYG{o}{.}\PYG{n+na}{ids}\PYG{o}{.}\PYG{n+na}{redirect}\PYG{o}{.}\PYG{n+na}{pattern}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}null|(.*/saml2/idp/sso.*)\PYGZdq{}}
+    \PYG{n}{cookie}\PYG{o}{.}\PYG{n+na}{additional}\PYG{o}{.}\PYG{n+na}{attributes}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}\PYGZdq{}}
+\PYG{o}{/\PYGZgt{}}
+\end{Verbatim}

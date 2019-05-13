@@ -1,0 +1,28 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{if} \PYG{o}{(}\PYG{n}{assertion}\PYG{o}{.}\PYG{n+na}{isSigned}\PYG{o}{())} \PYG{o}{\PYGZob{}}
+    \PYG{k}{if} \PYG{o}{(}\PYG{n}{samlConfig} \PYG{o}{!=} \PYG{k+kc}{null} \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{n}{samlConfig}\PYG{o}{.}\PYG{n+na}{getIdpX509Certificate}\PYG{o}{()} \PYG{o}{!=} \PYG{k+kc}{null}\PYG{o}{)} \PYG{o}{\PYGZob{}}
+        \PYG{k+kd}{final} \PYG{n}{X509Certificate} \PYG{n}{x509} \PYG{o}{=} \PYG{n}{samlConfig}\PYG{o}{.}\PYG{n+na}{getIdpX509Certificate}\PYG{o}{();}
+        \PYG{k+kd}{final} \PYG{n}{BasicX509Credential} \PYG{n}{publicCredential} \PYG{o}{=} \PYG{k}{new} \PYG{n}{BasicX509Credential}\PYG{o}{(}\PYG{n}{x509}\PYG{o}{);}
+        \PYG{k+kd}{final} \PYG{n}{SAMLSignatureProfileValidator} \PYG{n}{profileValidator} 
+        	\PYG{o}{=} \PYG{k}{new} \PYG{n}{SAMLSignatureProfileValidator}\PYG{o}{();}
+        \PYG{k+kd}{final} \PYG{n}{Signature} \PYG{n}{signature} \PYG{o}{=} \PYG{k}{this}\PYG{o}{.}\PYG{n+na}{assertion}\PYG{o}{.}\PYG{n+na}{getSignature}\PYG{o}{();}
+        \PYG{k}{if} \PYG{o}{(}\PYG{n}{signature} \PYG{o}{!=} \PYG{k+kc}{null}\PYG{o}{)} \PYG{o}{\PYGZob{}}
+            \PYG{n}{assertion}\PYG{o}{.}\PYG{n+na}{getDOM}\PYG{o}{().}\PYG{n+na}{setIdAttribute}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}ID\PYGZdq{}}\PYG{o}{,} \PYG{k+kc}{true}\PYG{o}{);}
+            \PYG{k}{try} \PYG{o}{\PYGZob{}}
+                \PYG{n}{profileValidator}\PYG{o}{.}\PYG{n+na}{validate}\PYG{o}{(}\PYG{n}{assertion}\PYG{o}{.}\PYG{n+na}{getSignature}\PYG{o}{());}
+                \PYG{n}{getSignatureValidationProvider}\PYG{o}{().}\PYG{n+na}{validate}\PYG{o}{(}\PYG{n}{signature}\PYG{o}{,} \PYG{n}{publicCredential}\PYG{o}{);}
+            \PYG{o}{\PYGZcb{}} \PYG{k}{catch} \PYG{o}{(}\PYG{n}{SignatureException} \PYG{n}{e}\PYG{o}{)} \PYG{o}{\PYGZob{}}
+                \PYG{k}{throw} \PYG{k}{new} \PYG{n}{SAMLException}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}Exception while validation.\PYGZdq{}}\PYG{o}{,} \PYG{n}{e}\PYG{o}{);}
+            \PYG{o}{\PYGZcb{}}
+        \PYG{o}{\PYGZcb{}} \PYG{k}{else} \PYG{o}{\PYGZob{}}
+            \PYG{k}{throw} \PYG{k}{new} \PYG{n}{SAMLException}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}No valid signature found in the }
+\PYG{l+s}{            SAML Message. Perhaps its a HTTP\PYGZhy{}Redirect request\PYGZdq{}}\PYG{o}{);}
+        \PYG{o}{\PYGZcb{}}
+        \PYG{n}{isValid} \PYG{o}{=} \PYG{k+kc}{true}\PYG{o}{;}
+    \PYG{o}{\PYGZcb{}} \PYG{k}{else} \PYG{o}{\PYGZob{}}
+        \PYG{n}{isValid} \PYG{o}{=} \PYG{k+kc}{false}\PYG{o}{;}
+    \PYG{o}{\PYGZcb{}}
+\PYG{o}{\PYGZcb{}} \PYG{k}{else} \PYG{o}{\PYGZob{}}
+    \PYG{k}{throw} \PYG{k}{new} \PYG{n}{SAMLException}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}Assertions in the SAML validator are not signed.\PYGZdq{}}\PYG{o}{);}
+\PYG{o}{\PYGZcb{}}
+\end{Verbatim}

@@ -1,0 +1,17 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kd}{private} \PYG{k+kd}{static} \PYG{n}{SignatureValidationProvider} \PYG{n+nf}{getSignatureValidationProvider}\PYG{o}{()} 
+                \PYG{k+kd}{throws} \PYG{n}{SignatureException} \PYG{o}{\PYGZob{}}
+    \PYG{n}{SignatureValidationProvider} \PYG{n}{validatorInstance}\PYG{o}{;}
+    \PYG{n}{ServiceLoader}\PYG{o}{\PYGZlt{}}\PYG{n}{SignatureValidationProvider}\PYG{o}{\PYGZgt{}} \PYG{n}{loader} \PYG{o}{=} \PYG{n}{ServiceLoader}
+        \PYG{o}{.}\PYG{n+na}{load}\PYG{o}{(}\PYG{n}{SignatureValidationProvider}\PYG{o}{.}\PYG{n+na}{class}\PYG{o}{,}
+            \PYG{n}{SamlInitializationSupport}\PYG{o}{.}\PYG{n+na}{getBundleClassLoader}\PYG{o}{());}
+    \PYG{n}{Iterator}\PYG{o}{\PYGZlt{}}\PYG{n}{SignatureValidationProvider}\PYG{o}{\PYGZgt{}} \PYG{n}{iterator} \PYG{o}{=} \PYG{n}{loader}\PYG{o}{.}\PYG{n+na}{iterator}\PYG{o}{();}
+    \PYG{k}{if}\PYG{o}{(}\PYG{n}{iterator}\PYG{o}{.}\PYG{n+na}{hasNext}\PYG{o}{())} \PYG{o}{\PYGZob{}}
+        \PYG{n}{validatorInstance} \PYG{o}{=} \PYG{n}{iterator}\PYG{o}{.}\PYG{n+na}{next}\PYG{o}{();}
+    \PYG{o}{\PYGZcb{}} \PYG{k}{else} \PYG{o}{\PYGZob{}}
+        \PYG{k}{throw} \PYG{k}{new} \PYG{n}{SignatureException}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}Could not load a signature }
+\PYG{l+s}{        validation provider implementation via service API\PYGZdq{}}\PYG{o}{);}
+    \PYG{o}{\PYGZcb{}}
+    \PYG{k}{return} \PYG{n}{validatorInstance}\PYG{o}{;}
+\PYG{o}{\PYGZcb{}}
+\end{Verbatim}

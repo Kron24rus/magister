@@ -1,0 +1,17 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+cp}{\PYGZlt{}?xml version=\PYGZdq{}1.0\PYGZdq{} encoding=\PYGZdq{}UTF\PYGZhy{}8\PYGZdq{}?\PYGZgt{}}
+\PYG{n+nt}{\PYGZlt{}jcr:root} \PYG{n+na}{xmlns:sling=}\PYG{l+s}{\PYGZdq{}http://sling.apache.org/jcr/sling/1.0\PYGZdq{}} 
+	      \PYG{n+na}{xmlns:jcr=}\PYG{l+s}{\PYGZdq{}http://www.jcp.org/jcr/1.0\PYGZdq{}}
+    \PYG{n+na}{jcr:primaryType=}\PYG{l+s}{\PYGZdq{}sling:OsgiConfig\PYGZdq{}}
+    \PYG{n+na}{sp.acs.uri=}\PYG{l+s}{\PYGZdq{}https://com.example/bin/login.example.html\PYGZdq{}}
+    \PYG{n+na}{sp.name=}\PYG{l+s}{\PYGZdq{}testservice\PYGZdq{}}
+    \PYG{n+na}{sp.id=}\PYG{l+s}{\PYGZdq{}localhost\PYGZus{}test\PYGZdq{}}
+    \PYG{n+na}{x509.certificate.alias=}\PYG{l+s}{\PYGZdq{}test\PYGZhy{}cert\PYGZhy{}alias\PYGZdq{}}
+    \PYG{n+na}{x509.certificate.password=}\PYG{l+s}{\PYGZdq{}password\PYGZdq{}}
+    \PYG{n+na}{wcms.ids.cookie.name=}\PYG{l+s}{\PYGZdq{}TEST\PYGZus{}IDS\PYGZus{}LOCALHOST\PYGZdq{}}
+    \PYG{n+na}{wcms.ids.redirect.landingPage.url=}\PYG{l+s}{\PYGZdq{}/bin/home\PYGZdq{}}
+    \PYG{n+na}{wcms.ids.error.redirect.url=}\PYG{l+s}{\PYGZdq{}/bin/test/error\PYGZdq{}}
+    \PYG{n+na}{wcms.ids.redirect.pattern=}\PYG{l+s}{\PYGZdq{}null|(.*/saml2/idp/sso.*)\PYGZdq{}}
+    \PYG{n+na}{cookie.additional.attributes=}\PYG{l+s}{\PYGZdq{}\PYGZdq{}}
+\PYG{n+nt}{/\PYGZgt{}}
+\end{Verbatim}

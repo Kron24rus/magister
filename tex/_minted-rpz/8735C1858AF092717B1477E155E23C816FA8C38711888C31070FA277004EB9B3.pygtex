@@ -1,0 +1,25 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kd}{protected} \PYG{n}{AuthnRequest} \PYG{n+nf}{generateSamlObject}\PYG{o}{()} \PYG{k+kd}{throws} \PYG{n}{SAMLException} \PYG{o}{\PYGZob{}}
+    \PYG{k+kd}{final} \PYG{n}{AuthnRequestBuilder} \PYG{n}{requestBuilder} \PYG{o}{=} \PYG{k}{new} \PYG{n}{AuthnRequestBuilder}\PYG{o}{();}
+    \PYG{k+kd}{final} \PYG{n}{IssuerBuilder} \PYG{n}{issuerBuilder} \PYG{o}{=} \PYG{k}{new} \PYG{n}{IssuerBuilder}\PYG{o}{();}
+    \PYG{k+kd}{final} \PYG{n}{Issuer} \PYG{n}{issuer} \PYG{o}{=} \PYG{n}{issuerBuilder}\PYG{o}{.}\PYG{n+na}{buildObject}\PYG{o}{();}
+    \PYG{n}{issuer}\PYG{o}{.}\PYG{n+na}{setValue}\PYG{o}{(}\PYG{n}{serviceProviderId}\PYG{o}{);}
+    \PYG{k+kd}{final} \PYG{n}{NameIDPolicyBuilder} \PYG{n}{policyBuilder} \PYG{o}{=} \PYG{k}{new} \PYG{n}{NameIDPolicyBuilder}\PYG{o}{();}
+    \PYG{k+kd}{final} \PYG{n}{NameIDPolicy} \PYG{n}{nameIDPolicy} \PYG{o}{=} \PYG{n}{policyBuilder}\PYG{o}{.}\PYG{n+na}{buildObject}\PYG{o}{();}
+    \PYG{n}{nameIDPolicy}\PYG{o}{.}\PYG{n+na}{setAllowCreate}\PYG{o}{(}\PYG{n}{Boolean}\PYG{o}{.}\PYG{n+na}{TRUE}\PYG{o}{);}
+    \PYG{k+kd}{final} \PYG{n}{AuthnRequest} \PYG{n}{authnRequest} \PYG{o}{=} \PYG{n}{requestBuilder}\PYG{o}{.}\PYG{n+na}{buildObject}\PYG{o}{();}
+    \PYG{k+kd}{final} \PYG{n}{DateTime} \PYG{n}{dateTime} \PYG{o}{=} \PYG{k}{new} \PYG{n}{DateTime}\PYG{o}{();}
+    \PYG{n}{authnRequest}\PYG{o}{.}\PYG{n+na}{setIssueInstant}\PYG{o}{(}\PYG{n}{dateTime}\PYG{o}{);}
+    \PYG{n}{authnRequest}\PYG{o}{.}\PYG{n+na}{setIssuer}\PYG{o}{(}\PYG{n}{issuer}\PYG{o}{);}
+    \PYG{n}{authnRequest}\PYG{o}{.}\PYG{n+na}{setID}\PYG{o}{(}\PYG{k}{this}\PYG{o}{.}\PYG{n+na}{generateUUID}\PYG{o}{());}
+    \PYG{n}{authnRequest}\PYG{o}{.}\PYG{n+na}{setDestination}\PYG{o}{(}\PYG{n}{samlConfig}\PYG{o}{.}\PYG{n+na}{getSSOEndPoint}\PYG{o}{());}
+    \PYG{n}{authnRequest}\PYG{o}{.}\PYG{n+na}{setProtocolBinding}\PYG{o}{(}\PYG{n}{BindingType}\PYG{o}{.}\PYG{n+na}{POST}\PYG{o}{.}\PYG{n+na}{getURI}\PYG{o}{());}
+    \PYG{n}{authnRequest}\PYG{o}{.}\PYG{n+na}{setAssertionConsumerServiceURL}\PYG{o}{(}\PYG{n}{samlConfig}
+                \PYG{o}{.}\PYG{n+na}{getAcsURI}\PYG{o}{(}\PYG{n}{serviceProviderId}\PYG{o}{));}
+    \PYG{n}{authnRequest}\PYG{o}{.}\PYG{n+na}{setVersion}\PYG{o}{(}\PYG{n}{SAMLVersion}\PYG{o}{.}\PYG{n+na}{VERSION\PYGZus{}20}\PYG{o}{);}
+    \PYG{n}{authnRequest}\PYG{o}{.}\PYG{n+na}{setNameIDPolicy}\PYG{o}{(}\PYG{n}{nameIDPolicy}\PYG{o}{);}
+    \PYG{n}{authnRequest}\PYG{o}{.}\PYG{n+na}{setIsPassive}\PYG{o}{(}\PYG{n}{isPassive}\PYG{o}{);}
+    \PYG{n}{authnRequest}\PYG{o}{.}\PYG{n+na}{setForceAuthn}\PYG{o}{(}\PYG{n}{Boolean}\PYG{o}{.}\PYG{n+na}{FALSE}\PYG{o}{);}
+    \PYG{k}{return} \PYG{n}{authnRequest}\PYG{o}{;}
+\PYG{o}{\PYGZcb{}}
+\end{Verbatim}

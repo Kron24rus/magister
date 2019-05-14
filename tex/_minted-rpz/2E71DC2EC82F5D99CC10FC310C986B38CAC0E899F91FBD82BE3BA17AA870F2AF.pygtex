@@ -1,0 +1,20 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kd}{protected} \PYG{n}{LogoutResponse} \PYG{n+nf}{generateSamlObject}\PYG{o}{()} \PYG{k+kd}{throws} \PYG{n}{SAMLException} \PYG{o}{\PYGZob{}}
+    \PYG{k+kd}{final} \PYG{n}{LogoutResponse} \PYG{n}{logoutResponse} \PYG{o}{=} \PYG{k}{new} \PYG{n}{LogoutResponseBuilder}\PYG{o}{()}
+         \PYG{o}{.}\PYG{n+na}{buildObject}\PYG{o}{();}
+    \PYG{k+kd}{final} \PYG{n}{Issuer} \PYG{n}{issuer} \PYG{o}{=} \PYG{k}{new} \PYG{n}{IssuerBuilder}\PYG{o}{().}\PYG{n+na}{buildObject}\PYG{o}{();}
+    \PYG{n}{issuer}\PYG{o}{.}\PYG{n+na}{setValue}\PYG{o}{(}\PYG{n}{serviceProviderId}\PYG{o}{);}
+    \PYG{k+kd}{final} \PYG{n}{Status} \PYG{n}{status} \PYG{o}{=} \PYG{k}{new} \PYG{n}{StatusBuilder}\PYG{o}{().}\PYG{n+na}{buildObject}\PYG{o}{();}
+    \PYG{k+kd}{final} \PYG{n}{StatusCode} \PYG{n}{statusCode} \PYG{o}{=} \PYG{k}{new} \PYG{n}{StatusCodeBuilder}\PYG{o}{().}\PYG{n+na}{buildObject}\PYG{o}{();}
+    \PYG{n}{statusCode}\PYG{o}{.}\PYG{n+na}{setValue}\PYG{o}{(}\PYG{n}{StatusCode}\PYG{o}{.}\PYG{n+na}{SUCCESS}\PYG{o}{);}
+    \PYG{n}{status}\PYG{o}{.}\PYG{n+na}{setStatusCode}\PYG{o}{(}\PYG{n}{statusCode}\PYG{o}{);}
+    \PYG{n}{logoutResponse}\PYG{o}{.}\PYG{n+na}{setID}\PYG{o}{(}\PYG{k}{this}\PYG{o}{.}\PYG{n+na}{generateUUID}\PYG{o}{());}
+    \PYG{n}{logoutResponse}\PYG{o}{.}\PYG{n+na}{setInResponseTo}\PYG{o}{(}\PYG{n}{messageId}\PYG{o}{);}
+    \PYG{n}{logoutResponse}\PYG{o}{.}\PYG{n+na}{setDestination}\PYG{o}{(}\PYG{k}{this}\PYG{o}{.}\PYG{n+na}{samlConfig}\PYG{o}{.}\PYG{n+na}{getSLOEndPoint}\PYG{o}{());}
+    \PYG{n}{logoutResponse}\PYG{o}{.}\PYG{n+na}{setIssuer}\PYG{o}{(}\PYG{n}{issuer}\PYG{o}{);}
+    \PYG{n}{logoutResponse}\PYG{o}{.}\PYG{n+na}{setStatus}\PYG{o}{(}\PYG{n}{status}\PYG{o}{);}
+    \PYG{k+kd}{final} \PYG{n}{DateTime} \PYG{n}{dateTime} \PYG{o}{=} \PYG{k}{new} \PYG{n}{DateTime}\PYG{o}{();}
+    \PYG{n}{logoutResponse}\PYG{o}{.}\PYG{n+na}{setIssueInstant}\PYG{o}{(}\PYG{n}{dateTime}\PYG{o}{);}
+    \PYG{k}{return} \PYG{n}{logoutResponse}\PYG{o}{;}
+\PYG{o}{\PYGZcb{}}
+\end{Verbatim}

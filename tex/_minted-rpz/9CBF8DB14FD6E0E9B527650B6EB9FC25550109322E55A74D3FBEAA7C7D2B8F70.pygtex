@@ -1,0 +1,22 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kd}{protected} \PYG{n}{LogoutRequest} \PYG{n+nf}{generateSamlObject}\PYG{o}{()} \PYG{k+kd}{throws} \PYG{n}{SAMLException} \PYG{o}{\PYGZob{}}
+    \PYG{k+kd}{final} \PYG{n}{LogoutRequest} \PYG{n}{logoutRequest} \PYG{o}{=} \PYG{k}{new} \PYG{n}{LogoutRequestBuilder}\PYG{o}{()}
+          \PYG{o}{.}\PYG{n+na}{buildObject}\PYG{o}{();}
+    \PYG{n}{logoutRequest}\PYG{o}{.}\PYG{n+na}{setID}\PYG{o}{(}\PYG{k}{this}\PYG{o}{.}\PYG{n+na}{generateUUID}\PYG{o}{());}
+    \PYG{k+kd}{final} \PYG{n}{DateTime} \PYG{n}{issueInstant} \PYG{o}{=} \PYG{k}{new} \PYG{n}{DateTime}\PYG{o}{();}
+    \PYG{n}{logoutRequest}\PYG{o}{.}\PYG{n+na}{setIssueInstant}\PYG{o}{(}\PYG{n}{issueInstant}\PYG{o}{);}
+    \PYG{n}{logoutRequest}\PYG{o}{.}\PYG{n+na}{setDestination}\PYG{o}{(}\PYG{k}{this}\PYG{o}{.}\PYG{n+na}{samlConfig}\PYG{o}{.}\PYG{n+na}{getSLOEndPoint}\PYG{o}{());}
+    \PYG{k+kd}{final} \PYG{n}{IssuerBuilder} \PYG{n}{issuerBuilder} \PYG{o}{=} \PYG{k}{new} \PYG{n}{IssuerBuilder}\PYG{o}{();}
+    \PYG{k+kd}{final} \PYG{n}{Issuer} \PYG{n}{issuer} \PYG{o}{=} \PYG{n}{issuerBuilder}\PYG{o}{.}\PYG{n+na}{buildObject}\PYG{o}{();}
+    \PYG{n}{issuer}\PYG{o}{.}\PYG{n+na}{setValue}\PYG{o}{(}\PYG{n}{serviceProviderId}\PYG{o}{);}
+    \PYG{n}{logoutRequest}\PYG{o}{.}\PYG{n+na}{setIssuer}\PYG{o}{(}\PYG{n}{issuer}\PYG{o}{);}
+    \PYG{k+kd}{final} \PYG{n}{NameID} \PYG{n}{nameId} \PYG{o}{=} \PYG{k}{new} \PYG{n}{NameIDBuilder}\PYG{o}{().}\PYG{n+na}{buildObject}\PYG{o}{();}
+    \PYG{n}{nameId}\PYG{o}{.}\PYG{n+na}{setFormat}\PYG{o}{(}\PYG{n}{NameIDType}\PYG{o}{.}\PYG{n+na}{UNSPECIFIED}\PYG{o}{);}
+    \PYG{n}{nameId}\PYG{o}{.}\PYG{n+na}{setValue}\PYG{o}{(}\PYG{n}{username}\PYG{o}{);}
+    \PYG{n}{logoutRequest}\PYG{o}{.}\PYG{n+na}{setNameID}\PYG{o}{(}\PYG{n}{nameId}\PYG{o}{);}
+    \PYG{k+kd}{final} \PYG{n}{SessionIndex} \PYG{n}{si} \PYG{o}{=} \PYG{k}{new} \PYG{n}{SessionIndexBuilder}\PYG{o}{().}\PYG{n+na}{buildObject}\PYG{o}{();}
+    \PYG{n}{si}\PYG{o}{.}\PYG{n+na}{setSessionIndex}\PYG{o}{(}\PYG{n}{sessionIndex}\PYG{o}{);}
+    \PYG{n}{logoutRequest}\PYG{o}{.}\PYG{n+na}{getSessionIndexes}\PYG{o}{().}\PYG{n+na}{add}\PYG{o}{(}\PYG{n}{si}\PYG{o}{);}
+    \PYG{k}{return} \PYG{n}{logoutRequest}\PYG{o}{;}
+\PYG{o}{\PYGZcb{}}
+\end{Verbatim}

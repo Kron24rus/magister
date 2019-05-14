@@ -1,0 +1,12 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+cp}{\PYGZlt{}?xml version=\PYGZdq{}1.0\PYGZdq{} encoding=\PYGZdq{}UTF\PYGZhy{}8\PYGZdq{}?\PYGZgt{}}
+\PYG{n+nt}{\PYGZlt{}jcr:root} \PYG{n+na}{xmlns:sling=}\PYG{l+s}{\PYGZdq{}http://sling.apache.org/jcr/sling/1.0\PYGZdq{}} 
+          \PYG{n+na}{xmlns:jcr=}\PYG{l+s}{\PYGZdq{}http://www.jcp.org/jcr/1.0\PYGZdq{}}
+          \PYG{n+na}{jcr:primaryType=}\PYG{l+s}{\PYGZdq{}sling:OsgiConfig\PYGZdq{}}
+    \PYG{n+na}{idp.metadata.uri=}\PYG{l+s}{\PYGZdq{}https://accounts.example.com/saml2/metadata\PYGZdq{}}
+    \PYG{n+na}{jvm.keystore.location=}\PYG{l+s}{\PYGZdq{}\PYGZdl{}\PYGZob{}keystorePath\PYGZcb{}\PYGZdq{}}
+    \PYG{n+na}{jvm.keystore.password=}\PYG{l+s}{\PYGZdq{}password\PYGZdq{}}
+    \PYG{n+na}{sp.saml.binding.type=}\PYG{l+s}{\PYGZdq{}POST\PYGZdq{}}
+    \PYG{n+na}{ids.cookie.expiry=}\PYG{l+s}{\PYGZdq{}\PYGZhy{}1\PYGZdq{}}
+\PYG{n+nt}{/\PYGZgt{}}
+\end{Verbatim}
